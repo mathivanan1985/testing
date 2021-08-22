@@ -1,4 +1,4 @@
-<div cdkDropListGroup class="board" (cdkDropListDropped)="drop($event)">
+<div cdkDropListGroup class="board">
 
     <div cdkDrag *ngFor="let list of board; let i=index">
         <div cdkDropList [cdkDropListData]="board[i].cards" (cdkDropListDropped)="drop($event, 'card')" class="list">
