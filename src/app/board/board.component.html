@@ -1,0 +1,97 @@
+<div cdkDropListGroup class="board" (cdkDropListDropped)="drop($event)">
+
+    <div cdkDrag *ngFor="let list of board; let i=index">
+        <div cdkDropList [cdkDropListData]="board[i].cards" (cdkDropListDropped)="drop($event, 'card')" class="list">
+            <span *ngIf="editingListId != list.id" (click)="editTitleList(list)" title="">{{list.name}}</span>
+
+            <div style="display:flex; justify-content:center" *ngIf="titleListEditor && editingListId == list.id">
+                <input #titleListInput [value]="list.name">
+                <button (click)="getTitleListOnKeyUp(titleListInput.value, list)">OK</button>
+            </div>
+
+            <button (click)="deleteCardAction($event, list.id, 0, deleteTemp, 0, list)" class="delete-card">X</button>
+            <div class="card" (click)="openModal(card, template)" cdkDrag *ngFor="let card of list.cards">
+                <button (click)="deleteCardAction($event, list.id, card.id, deleteTemp, 1, '')" class="delete-card">X</button>
+                <div class="card-horizontal">
+                    <div class="img-square-wrapper">
+                        <img class="" src="../../assets/images/user.png" alt="Card image cap">
+
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{card.title}}</p>
+                    </div>
+
+                </div>
+                <div>
+                    <p style="float:right" class="card-text">id: {{card.id}}</p>
+                </div>
+            </div>
+
+            <hr>
+            <div class="card" *ngIf="list.cards.length == 0 ">
+
+            </div>
+
+            <button class="add-card" (click)="addCardAction(list.id, addCardTemp, true)">Add New Card</button>
+        </div>
+    </div>
+    <div class="list">
+        <button (click)="addCardAction(0, addCardTemp, false)">Add New Board</button>
+    </div>
+
+
+</div>
+
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Description</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <app-card-modal (formSubmitEvent)="closeModal()" [selectedCard]="cardObject"></app-card-modal>
+    </div>
+
+</ng-template>
+
+<ng-template #deleteTemp>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Description</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="isSuccessdeleteCard()">Yes</button>
+        <button type="button" class="btn btn-default" (click)="modalRef.hide()">No</button>
+    </div>
+</ng-template>
+
+<ng-template #addCardTemp>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Description</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">×</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" [(ngModel)]="newCard.title" />
+            </div>
+            <div class="form-group" *ngIf="isNewCard">
+                <label>content</label>
+                <textarea class="form-control" [(ngModel)]="newCard.content"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="addNewCard(newCard)">Add</button>
+        <button type="button" class="btn btn-default" (click)="modalRef.hide()">Cancel</button>
+    </div>
+</ng-template>

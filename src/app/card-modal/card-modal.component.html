@@ -1,0 +1,36 @@
+<div *ngIf="!openForm">
+    <a (click)="openFormAction()" href="javascript:void(0)">click to update</a>
+    <h2>{{selectedCard.title}}</h2>
+    <hr>
+    <p>{{selectedCard.content}}</p>
+</div>
+
+<form *ngIf="openForm" [formGroup]="cardForm" (ngSubmit)="updateCardAction(cardForm)">
+    <div class="col-md-12">
+        <div class="form-group">
+            <div *ngIf="cardForm.invalid" class="alert error">Not Valid</div>
+            <input formControlName="id" type="hidden">
+
+            <!-- cardForm.title -->
+            <label>Name</label>
+            <input formControlName="title" type="" class="form-control">
+            <p *ngIf="cardForm.get('title').hasError('required')" class="error">
+                Name of the card
+            </p>
+        </div>
+
+        <!-- cardForm.content -->
+        <label>Content</label>
+        <textarea class="form-control" formControlName="content" cols="" rows=""></textarea>
+        <p *ngIf="cardForm.get('content').hasError('minlength')" class="error">
+            Minimum 5 Character
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Update</button>
+        <button type="button" class="btn btn-default" (click)="closeFormAction()">Close</button>
+    </div>
+
+
+</form>
